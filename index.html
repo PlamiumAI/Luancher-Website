@@ -37,16 +37,62 @@
             line-height: 1.6;
         }
 
-        /* Animated Grid Background */
-        .grid {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
+        /* --- THE PRELOADER (SILHOUETTE) --- */
+        #intro-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .intro-text {
+            font-size: clamp(2rem, 15vw, 12rem);
+            font-weight: 900;
+            letter-spacing: -5px;
+            color: var(--accent);
+            background: #000;
+            /* Removed mix-blend-mode for normal color rendering */
+            transform: scale(0.5);
+            animation: superSnappy 1.3s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        .intro-container {
+            background: #000; /* This layer gets punched through */
+            width: 100%;
             height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Animation Sequence: Quick scale -> slow -> dip -> BLAST */
+        @keyframes superSnappy {
+            0% { transform: scale(0.5); opacity: 0; }
+            10% { opacity: 1; }
+            25% { transform: scale(1.1); } /* Quick scale up */
+            50% { transform: scale(1.15); } /* Slowing down */
+            65% { transform: scale(0.95); } /* Scaling down a bit (anticipation) */
+            100% { transform: scale(60); } /* Scaling up fast to reveal */
+        }
+
+        .content-wrapper {
+            opacity: 0;
+            animation: fadeInContent 0.5s ease 1.1s forwards;
+        }
+
+        @keyframes fadeInContent {
+            to { opacity: 1; }
+        }
+
+        /* --- REST OF YOUR ORIGINAL STYLES --- */
+        .grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: radial-gradient(circle at 2px 2px, #1a1a1a 1px, transparent 0);
-            background-size: 40px 40px; 
-            z-index: -1;
+            background-size: 40px 40px; z-index: -1;
             animation: gridMove 20s linear infinite;
         }
 
@@ -55,17 +101,10 @@
             100% { background-position: 40px 40px; }
         }
 
-        /* Glowing Orbs */
         .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.3;
-            z-index: -1;
-            pointer-events: none;
-            animation: float 20s ease-in-out infinite;
+            position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.3;
+            z-index: -1; pointer-events: none; animation: float 20s ease-in-out infinite;
         }
-
         .orb-1 { width: 400px; height: 400px; background: var(--accent); top: 10%; left: 10%; }
         .orb-2 { width: 300px; height: 300px; background: #00ccff; bottom: 20%; right: 10%; animation-delay: -10s; }
 
@@ -75,84 +114,37 @@
             66% { transform: translate(-50px, 50px) scale(0.9); }
         }
 
-        /* Navigation */
         nav {
-            padding: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-            position: sticky;
-            top: 0;
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 100;
+            padding: 2rem; display: flex; justify-content: space-between; align-items: center;
+            max-width: 1400px; margin: 0 auto; position: sticky; top: 0;
+            background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(10px); z-index: 100;
             transition: border-color 0.3s ease;
         }
 
         nav.scrolled { border-bottom: 1px solid var(--border); }
 
-        .logo { 
-            font-weight: 900; 
-            font-size: 1.5rem; 
-            letter-spacing: -1px; 
-            color: var(--accent);
-            cursor: pointer;
-        }
-
+        .logo { font-weight: 900; font-size: 1.5rem; letter-spacing: -1px; color: var(--accent); cursor: pointer; }
         .nav-links { display: flex; gap: 2rem; align-items: center; }
-        .nav-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
+        .nav-links a { color: var(--text-dim); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
         .nav-links a:hover { color: var(--text); }
 
-        /* Hero Section */
         .hero {
-            min-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 0 2rem;
+            min-height: 90vh; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; text-align: center; padding: 0 2rem;
         }
 
-        h1 { 
-            font-size: clamp(2.5rem, 8vw, 6rem); 
-            font-weight: 900; 
-            margin-bottom: 1.5rem;
-            animation: fadeInUp 1s ease forwards;
-        }
+        h1 { font-size: clamp(2.5rem, 8vw, 6rem); font-weight: 900; margin-bottom: 1.5rem; animation: fadeInUp 1s ease forwards; }
 
         .glitch-wrapper { min-width: 300px; display: inline-block; }
         .glitch { color: var(--accent); text-shadow: 0 0 20px rgba(0, 255, 102, 0.6); transition: opacity 0.4s ease; }
         .fade-out { opacity: 0; transform: translateY(10px); }
 
-        .hero-subtitle {
-            color: var(--text-dim);
-            font-size: clamp(1rem, 3vw, 1.3rem);
-            max-width: 700px;
-            margin: 0 auto 3rem;
-        }
-
+        .hero-subtitle { color: var(--text-dim); font-size: clamp(1rem, 3vw, 1.3rem); max-width: 700px; margin: 0 auto 3rem; }
         .cta-group { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
 
-        /* Buttons */
         .btn {
-            padding: 1.2rem 3rem;
-            text-decoration: none;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            border: none;
+            padding: 1.2rem 3rem; text-decoration: none; font-weight: 600; border-radius: 8px;
+            transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; border: none;
         }
 
         .btn-primary { background: var(--accent); color: #000; border: 2px solid var(--accent); }
@@ -160,130 +152,62 @@
         .btn-secondary { background: transparent; color: var(--text); border: 2px solid var(--border); }
         .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* Features Section */
         section { max-width: 1400px; margin: 0 auto; padding: 6rem 2rem; }
         .section-header { text-align: center; margin-bottom: 4rem; }
         .section-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; margin-bottom: 1rem; color: var(--accent); }
 
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
 
         .card {
-            background: var(--surface);
-            padding: 2.5rem;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            transition: all 0.4s ease;
-            opacity: 0;
-            transform: translateY(30px);
+            background: var(--surface); padding: 2.5rem; border-radius: 16px; border: 1px solid var(--border);
+            transition: all 0.4s ease; opacity: 0; transform: translateY(30px);
         }
 
         .card.visible { opacity: 1; transform: translateY(0); }
         .card:hover { border-color: var(--accent); transform: translateY(-10px); }
 
         .card-icon {
-            width: 60px; height: 60px;
-            background: rgba(0, 255, 102, 0.1);
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 1.5rem;
-            color: var(--accent);
+            width: 60px; height: 60px; background: rgba(0, 255, 102, 0.1); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: var(--accent);
         }
 
         .card h3 { margin-bottom: 1rem; }
         .card p { color: var(--text-dim); }
 
-        /* CTA Section */
         .cta-section {
-            background: var(--surface);
-            border-radius: 24px;
-            padding: 4rem;
-            text-align: center;
-            border: 1px solid var(--border);
-            margin: 4rem 2rem;
+            background: var(--surface); border-radius: 24px; padding: 4rem;
+            text-align: center; border: 1px solid var(--border); margin: 4rem 2rem;
         }
 
-        /* MODAL STYLES (PSEUDO-CORPORATE) */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); display: none; justify-content: center; align-items: center; z-index: 1000;
         }
 
         .modal-container {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            width: 90%;
-            max-width: 800px;
-            max-height: 85vh;
-            border-radius: 12px;
-            overflow-y: auto;
-            position: relative;
-            padding: 3rem;
-            text-align: left;
+            background: var(--surface); border: 1px solid var(--border); width: 90%;
+            max-width: 800px; max-height: 85vh; border-radius: 12px; overflow-y: auto; position: relative; padding: 3rem; text-align: left;
         }
 
-        .modal-close {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: none;
-            border: none;
-            color: var(--text-dim);
-            cursor: pointer;
-            transition: color 0.2s;
-        }
+        .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--text-dim); cursor: pointer; transition: color 0.2s; }
         .modal-close:hover { color: var(--accent); }
 
         .modal-title { color: var(--accent); font-weight: 900; margin-bottom: 1.5rem; }
         .modal-h3 { margin-top: 2rem; margin-bottom: 0.5rem; color: var(--text); border-left: 3px solid var(--accent); padding-left: 10px; }
         
         .cmd-container {
-            position: relative;
-            background: var(--bg); 
-            border: 1px solid var(--border); 
-            border-radius: 6px; 
-            margin: 1rem 0; 
-            padding: 1rem;
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 1rem;
+            position: relative; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; 
+            margin: 1rem 0; padding: 1rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
         }
 
-        .cmd-box { 
-            color: var(--text);
-            font-weight: 500;
-            word-break: break-all;
-            font-family: monospace;
-            font-size: 0.9rem;
-        }
+        .cmd-box { color: var(--text); font-weight: 500; word-break: break-all; font-family: monospace; font-size: 0.9rem; }
 
         .copy-btn {
-            background: var(--surface-elevated);
-            border: 1px solid var(--border);
-            color: var(--text-dim);
-            padding: 0.4rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            background: var(--surface-elevated); border: 1px solid var(--border); color: var(--text-dim);
+            padding: 0.4rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
 
-        .copy-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
+        .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
 
         footer { text-align: center; padding: 4rem 2rem; color: var(--text-dim); border-top: 1px solid var(--border); }
         .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; }
@@ -299,143 +223,158 @@
         }
     </style>
 </head>
-<body>
-    <div class="grid"></div>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    
-    <nav id="navbar">
-        <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">LUANCHER.</div>
-        <div class="nav-links">
-            <a href="#features">Features</a>
-            <a href="https://github.com/PlamiumAI/Luancher">GitHub</a>
-            <a href="#download">Download</a>
-        </div>
-    </nav>
-
-    <section class="hero">
-        <h1>The <span class="glitch-wrapper"><span id="rotate-text" class="glitch">launcher</span></span> for Luanti.</h1>
-        <p class="hero-subtitle">A professional-grade launcher built with Python and Flet. Experience lightning-fast updates, beautiful theming, and seamless integration.</p>
-        <div class="cta-group">
-            <a href="https://github.com/PlamiumAI/Luancher" class="btn btn-primary magnetic"><i data-lucide="github"></i> VISIT GITHUB</a>
-            <a href="#features" class="btn btn-secondary magnetic">EXPLORE FEATURES</a>
-        </div>
-    </section>
-
-    <section id="features">
-        <div class="section-header">
-            <h2 class="section-title">Powerful Features</h2>
-            <p class="section-subtitle">Everything you need for the perfect experience.</p>
-        </div>
-
-        <div class="features">
-            <div class="card">
-                <div class="card-icon"><i data-lucide="zap"></i></div>
-                <h3>Automated Self-Update</h3>
-                <p>Smart bootloader that verifies dependencies and updates Luancher automatically in under 10 seconds.</p>
-            </div>
-            
-            <div class="card">
-                <div class="card-icon"><i data-lucide="palette"></i></div>
-                <h3>Theming</h3>
-                <p>Pick a theme in Luancher, and it'll inject it directly into Luanti for a customized look.</p>
-            </div>
-            
-            <div class="card">
-                <div class="card-icon"><i data-lucide="shield-check"></i></div>
-                <h3>Open Source</h3>
-                <p>Completely open source and free forever. Licensed under MIT for the community.</p>
-            </div>
-
-            <div class="card">
-                <div class="card-icon"><i data-lucide="refresh-cw"></i></div>
-                <h3>Auto-Updates Luanti</h3>
-                <p>Luancher handles the Luanti updates for you. When a new version drops, it syncs automatically.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="download">
-        <div class="cta-section">
-            <h2>Ready to Get Started?</h2>
-            <p>Download Luancher today and experience Luanti like never before.</p>
-            <br>
-            <div class="cta-group">
-                <a href="https://github.com/PlamiumAI/Luancher/archive/refs/heads/main.zip" class="btn btn-primary magnetic">
-                    <i data-lucide="download"></i> DOWNLOAD NOW
-                </a>
-                <button onclick="toggleModal()" class="btn btn-secondary magnetic">
-                    <i data-lucide="book-open"></i> INSTALLATION GUIDE
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <div class="modal-overlay" id="guideModal" onclick="closeModal(event)">
-        <div class="modal-container">
-            <button class="modal-close" onclick="toggleModal()"><i data-lucide="x"></i></button>
-            <h2 class="modal-title">Installation Guide (Linux only)</h2>
-            <p>To run Luancher and build the Luanti engine, you must install the core system dependencies, clone the repository, set up a virtual environment, and initialize the project.</p>
-
-            <h3 class="modal-h3">1. System Dependencies</h3>
-            <p>Run the command corresponding to your Linux distribution.</p>
-
-            <strong>Debian / Ubuntu / Mint:</strong>
-            <div class="cmd-container">
-                <div class="cmd-box">sudo apt update && sudo apt install -y g++ make libc6-dev cmake libpng-dev libjpeg-dev libgl1-mesa-dev libsqlite3-dev libogg-dev libvorbis-dev libopenal-dev libcurl4-gnutls-dev libfreetype6-dev zlib1g-dev libgmp-dev libjsoncpp-dev libzstd-dev libluajit-5.1-dev gettext libsdl2-dev python3-venv git</div>
-                <button class="copy-btn" onclick="copyText(this)"><i data-lucide="copy" size="16"></i></button>
-            </div>
-
-            <strong>Arch Linux:</strong>
-            <div class="cmd-container">
-                <div class="cmd-box">sudo pacman -S --needed base-devel cmake libpng libjpeg-turbo mesa sqlite libogg libvorbis openal curl freetype2 zlib gmp jsoncpp zstd luajit gettext sdl2 git</div>
-                <button class="copy-btn" onclick="copyText(this)"><i data-lucide="copy" size="16"></i></button>
-            </div>
-
-            <strong>Fedora:</strong>
-            <div class="cmd-container">
-                <div class="cmd-box">sudo dnf install make gcc-c++ cmake libpng-devel libjpeg-turbo-devel mesa-libGL-devel sqlite-devel libogg-devel libvorbis-devel openal-soft-devel libcurl-devel freetype-devel zlib-devel gmp-devel jsoncpp-devel zstd-devel luajit-devel gettext-devel SDL2-devel git</div>
-                <button class="copy-btn" onclick="copyText(this)"><i data-lucide="copy" size="16"></i></button>
-            </div>
-
-            <h3 class="modal-h3">2. Clone and Environment Setup</h3>
-            <strong>Clone the repository:</strong>
-            <div class="cmd-container">
-                <div class="cmd-box">git clone https://github.com/PlamiumAI/Luancher.git && cd Luancher</div>
-                <button class="copy-btn" onclick="copyText(this)"><i data-lucide="copy" size="16"></i></button>
-            </div>
-            
-            <strong>Activate virtual environment:</strong>
-            <div class="cmd-container">
-                <div class="cmd-box">python3 -m venv venv && source venv/bin/activate</div>
-                <button class="copy-btn" onclick="copyText(this)"><i data-lucide="copy" size="16"></i></button>
-            </div>
-
-            <h3 class="modal-h3">3. Python Dependencies</h3>
-            <div class="cmd-container">
-                <div class="cmd-box">pip install flet Pillow requests feedparser</div>
-                <button class="copy-btn" onclick="copyText(this)"><i data-lucide="copy" size="16"></i></button>
-            </div>
-
-            <h3 class="modal-h3">4. Initialization</h3>
-            <div class="cmd-container">
-                <div class="cmd-box">python3 updater.py</div>
-                <button class="copy-btn" onclick="copyText(this)"><i data-lucide="copy" size="16"></i></button>
-            </div>
+<body style="overflow: hidden;"> <div id="intro-overlay">
+        <div class="intro-container">
+            <h1 class="intro-text">LUANCHER.</h1>
         </div>
     </div>
 
-    <footer>
-        <div class="footer-links">
-            <a href="https://github.com/PlamiumAI/Luancher">GitHub</a>
-            <a href="https://github.com/PlamiumAI">PlamiumAI</a>
-            <a href="https://discord.gg/DXhwwCpr3d">PlamiumAI Hub (Discord)</a>
+    <div class="content-wrapper">
+        <div class="grid"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        
+        <nav id="navbar">
+            <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">LUANCHER.</div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="https://github.com/PlamiumAI/Luancher">GitHub</a>
+                <a href="#download">Download</a>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <h1>The <span class="glitch-wrapper"><span id="rotate-text" class="glitch">launcher</span></span> for Luanti.</h1>
+            <p class="hero-subtitle">A professional-grade launcher built with Python and Flet. Experience lightning-fast updates, beautiful theming, and seamless integration.</p>
+            <div class="cta-group">
+                <a href="https://github.com/PlamiumAI/Luancher" class="btn btn-primary magnetic"><i data-lucide="github"></i> VISIT GITHUB</a>
+                <a href="#features" class="btn btn-secondary magnetic">EXPLORE FEATURES</a>
+            </div>
+        </section>
+
+        <section id="features">
+            <div class="section-header">
+                <h2 class="section-title">Powerful Features</h2>
+                <p class="section-subtitle">Everything you need for the perfect experience.</p>
+            </div>
+
+            <div class="features">
+                <div class="card">
+                    <div class="card-icon"><i data-lucide="zap"></i></div>
+                    <h3>Automated Self-Update</h3>
+                    <p>Smart bootloader that verifies dependencies and updates Luancher automatically in under 10 seconds.</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon"><i data-lucide="palette"></i></div>
+                    <h3>Theming</h3>
+                    <p>Pick a theme in Luancher, and it'll inject it directly into Luanti for a customized look.</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon"><i data-lucide="shield-check"></i></div>
+                    <h3>Open Source</h3>
+                    <p>Completely open source and free forever. Licensed under MIT for the community.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon"><i data-lucide="refresh-cw"></i></div>
+                    <h3>Auto-Updates Luanti</h3>
+                    <p>Luancher handles the Luanti updates for you. When a new version drops, it syncs automatically.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="download">
+            <div class="cta-section">
+                <h2>Ready to Get Started?</h2>
+                <p>Download Luancher today and experience Luanti like never before.</p>
+                <br>
+                <div class="cta-group">
+                    <a href="https://github.com/PlamiumAI/Luancher/archive/refs/heads/main.zip" class="btn btn-primary magnetic">
+                        <i data-lucide="download"></i> DOWNLOAD NOW
+                    </a>
+                    <button onclick="toggleModal()" class="btn btn-secondary magnetic">
+                        <i data-lucide="book-open"></i> INSTALLATION GUIDE
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="modal-overlay" id="guideModal" onclick="closeModal(event)">
+            <div class="modal-container">
+                <button class="modal-close" onclick="toggleModal()"><i data-lucide="x"></i></button>
+                <h2 class="modal-title">Installation Guide (Linux only)</h2>
+                <p>To run Luancher and build the Luanti engine, you must install the core system dependencies, clone the repository, set up a virtual environment, and initialize the project.</p>
+
+                <h3 class="modal-h3">1. System Dependencies</h3>
+                <p>Run the command corresponding to your Linux distribution.</p>
+
+                <strong>Debian / Ubuntu / Mint:</strong>
+                <div class="cmd-container">
+                    <div class="cmd-box">sudo apt update && sudo apt install -y g++ make libc6-dev cmake libpng-dev libjpeg-dev libgl1-mesa-dev libsqlite3-dev libogg-dev libvorbis-dev libopenal-dev libcurl4-gnutls-dev libfreetype6-dev zlib1g-dev libgmp-dev libjsoncpp-dev libzstd-dev libluajit-5.1-dev gettext libsdl2-dev python3-venv git</div>
+                    <button class="copy-btn" onclick="copyText(this)"><i data-lucide="copy" size="16"></i></button>
+                </div>
+
+                <strong>Arch Linux:</strong>
+                <div class="cmd-container">
+                    <div class="cmd-box">sudo pacman -S --needed base-devel cmake libpng libjpeg-turbo mesa sqlite libogg libvorbis openal curl freetype2 zlib gmp jsoncpp zstd luajit gettext sdl2 git</div>
+                    <button class="copy-btn" onclick="copyText(this)"><i data-lucide="copy" size="16"></i></button>
+                </div>
+
+                <strong>Fedora:</strong>
+                <div class="cmd-container">
+                    <div class="cmd-box">sudo dnf install make gcc-c++ cmake libpng-devel libjpeg-turbo-devel mesa-libGL-devel sqlite-devel libogg-devel libvorbis-devel openal-soft-devel libcurl-devel freetype-devel zlib-devel gmp-devel jsoncpp-devel zstd-devel luajit-devel gettext-devel SDL2-devel git</div>
+                    <button class="copy-btn" onclick="copyText(this)"><i data-lucide="copy" size="16"></i></button>
+                </div>
+
+                <h3 class="modal-h3">2. Clone and Environment Setup</h3>
+                <strong>Clone the repository:</strong>
+                <div class="cmd-container">
+                    <div class="cmd-box">git clone https://github.com/PlamiumAI/Luancher.git && cd Luancher</div>
+                    <button class="copy-btn" onclick="copyText(this)"><i data-lucide="copy" size="16"></i></button>
+                </div>
+                
+                <strong>Activate virtual environment:</strong>
+                <div class="cmd-container">
+                    <div class="cmd-box">python3 -m venv venv && source venv/bin/activate</div>
+                    <button class="copy-btn" onclick="copyText(this)"><i data-lucide="copy" size="16"></i></button>
+                </div>
+
+                <h3 class="modal-h3">3. Python Dependencies</h3>
+                <div class="cmd-container">
+                    <div class="cmd-box">pip install flet Pillow requests feedparser</div>
+                    <button class="copy-btn" onclick="copyText(this)"><i data-lucide="copy" size="16"></i></button>
+                </div>
+
+                <h3 class="modal-h3">4. Initialization</h3>
+                <div class="cmd-container">
+                    <div class="cmd-box">python3 updater.py</div>
+                    <button class="copy-btn" onclick="copyText(this)"><i data-lucide="copy" size="16"></i></button>
+                </div>
+            </div>
         </div>
-        <p>© 2026 PlamiumAI. Built by V2_0. Licensed under MIT.</p>
-    </footer>
+
+        <footer>
+            <div class="footer-links">
+                <a href="https://github.com/PlamiumAI/Luancher">GitHub</a>
+                <a href="https://github.com/PlamiumAI">PlamiumAI</a>
+                <a href="https://discord.gg/DXhwwCpr3d">PlamiumAI Hub (Discord)</a>
+            </div>
+            <p>© 2026 PlamiumAI. Built by V2_0. Licensed under MIT.</p>
+        </footer>
+    </div>
 
     <script>
         lucide.createIcons();
+
+        // SNAPPIER INTRO REMOVAL
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('intro-overlay').style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 1300); // SNAPPY! Matches the 1.3s animation
+        });
 
         // Modal Logic
         function toggleModal() {
@@ -452,15 +391,11 @@
         function copyText(btn) {
             const text = btn.previousElementSibling.innerText;
             navigator.clipboard.writeText(text).then(() => {
-                const icon = btn.querySelector('i');
                 const originalHtml = btn.innerHTML;
                 btn.innerHTML = '<i data-lucide="check" size="16"></i>';
                 lucide.createIcons();
-                btn.style.borderColor = 'var(--accent)';
-                
                 setTimeout(() => {
                     btn.innerHTML = originalHtml;
-                    btn.style.borderColor = 'var(--border)';
                     lucide.createIcons();
                 }, 2000);
             });
